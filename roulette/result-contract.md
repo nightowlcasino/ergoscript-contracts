@@ -21,7 +21,7 @@ anyOf(Coll((selectedGame == 1 && rouletteNumber % 2 == userGuess),
 (selectedGame == 2 && range >= -8 && range <= 9),
 
 // Columns // User Input: Column 0,1,2
-(selectedGame == 3 && rouletteNumber % 2 == userGuess), 
+(selectedGame == 3 && rouletteNumber % 3 == userGuess), 
 
 // Lower Mid Upper // User Input: Lower is 6 Mid is 18 Upper is 30
 (selectedGame == 4 && range >= -5 && range <= 6),
