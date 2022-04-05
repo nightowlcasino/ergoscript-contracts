@@ -1,11 +1,11 @@
-# Game Token Witness Contract for Red Black Green roulette games
+# Game Token Witness Contract for all roulette sub-games
 
 * Author: Krasavice Blasen
 * Created: 01-Apr-2022
 
 ## Description
 This contract stores the Night Owl game token, a token which allows the spending of house-contract funds. 
-The contract only allows spending of house-contract funds to match a user bet, where this matched bet alligns with the rules of Red Black Green roulette.
+The contract only allows spending of house-contract funds to match a user bet, where this matched bet alligns with the rules of a roulette sub-game.
 The spending condition of the contract is as follows:
 - Game Token Witness Box and House-contract Box are used as two inputs. 
 - Game Token Witness is an output with unchanged value and assets (hence is a witness)
@@ -13,18 +13,32 @@ The spending condition of the contract is as follows:
 - A matching bet is defined from the amount of funds direceted to the roulette red black green contract by the rules of the red black roulette game
 
 ## Game Rules
-If a user selects red or black with a wager of x OWLS, the matching bet will be x OWLs from the house.
-If a user selects green, the matching bet will be 34x OWLs from the house. 
+The user will indicate the sub-game they wish to pay in R4.
+The subgames for a wager of x OWLs are:
+
+0. Red/Black (House match bet = x OWLs)
+1. Odd/ Even (House match bet = x OWLs)
+2. Lower Half/ Upper Half (House match bet = x OWLs)
+3. Columns (House match bet = 2x OWLs)
+4. Lower third/ Mid third/ Upper third (House match bet = 2x OWLs)
+5. Exact number (House match bet = 34x OWLs)
 
 ## The contract
 ```scala
-// ROULETTE GAME NFT GUARD BOX
 {
+
+/* //// Register Details ////
+OUTPUTS(2).R4(Int) : Indication of roulette sub-game the user wishes to play
+OUTPUTS(2).R5(Int) : User selection
+OUTPUTS(2).R6(Coll[Bytes]) : Winner address */
+
+
 val betContract = fromBase58("abcdef") // Result Contract
 val owlId = fromBase58("CqK3dmwgkK83qVnHrc8YLpm46t5aDLWNViwrhmtLqPeh")
 val houseContract = fromBase58("abcd") // House contract ErgoTree
-val betMultiplier = if(OUTPUTS(2).R4[Long].get == 2) {35} else {2} // Represents payout multiplier (R4 = 2 represents green choice)
-val betMatcher = betMultiplier - 1 // Represents the share which the house contract matches
+val betMultipliers = Coll(2,2,2,3,3,35)
+val betMultiplier = betMultipliers(OUTPUTS(2).R4[Int].get)
+val betMatcher = betMultiplier - 1 // Represents the share which the house matches
 
 allOf(Coll(
 
