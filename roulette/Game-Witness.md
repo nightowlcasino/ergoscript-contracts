@@ -10,7 +10,7 @@ The spending condition of the contract is as follows:
 - Game Token Witness Box and House-contract Box are used as two inputs. 
 - Game Token Witness is an output with unchanged value and assets (hence is a witness)
 - House-Contract Box is an output with unchanged value, however it has a reduced number of OWLs, with this reduction being at most a matching bet. 
-- A matching bet is defined from the amount of funds direceted to the roulette red black green contract by the rules of the red black roulette game
+- A matching bet is defined from the amount of funds direceted to the rouletteresult contract by the rules of the roulette sub-game being played.
 
 ## Game Rules
 The user will indicate the sub-game they wish to pay in R4.
