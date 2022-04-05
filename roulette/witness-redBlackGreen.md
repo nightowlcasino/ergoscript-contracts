@@ -14,15 +14,15 @@ The spending condition of the contract is as follows:
 
 ## Game Rules
 If a user selects red or black with a wager of x OWLS, the matching bet will be x OWLs from the house.
-If a user selects green, the matching bet will be 35x OWLs from the house. 
+If a user selects green, the matching bet will be 34x OWLs from the house. 
 
 ## The contract
 ```scala
 // ROULETTE GAME NFT GUARD BOX
 {
-val betContract = fromBase64("abcdef") // Contract that describes the outcome of the game
+val betContract = fromBase58("abcdef") // Result Contract
 val owlId = fromBase58("CqK3dmwgkK83qVnHrc8YLpm46t5aDLWNViwrhmtLqPeh")
-val houseContract = fromBase64("abcd") // House contract ErgoTree
+val houseContract = fromBase58("abcd") // House contract ErgoTree
 val betMultiplier = if(OUTPUTS(2).R4[Long].get == 2) {35} else {2} // Represents payout multiplier (R4 = 2 represents green choice)
 val betMatcher = betMultiplier - 1 // Represents the share which the house contract matches
 
