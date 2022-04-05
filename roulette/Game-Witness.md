@@ -21,7 +21,7 @@ The subgames for a wager of x OWLs are:
 2. Lower Half/ Upper Half (House match bet = x OWLs)
 3. Columns (House match bet = 2x OWLs)
 4. Lower third/ Mid third/ Upper third (House match bet = 2x OWLs)
-5. Exact number (House match bet = 34x OWLs)
+5. Exact number (House match bet = 35x OWLs)
 
 ## The contract
 ```scala
@@ -36,7 +36,7 @@ OUTPUTS(2).R6(Coll[Bytes]) : Winner address */
 val betContract = fromBase58("abcdef") // Result Contract
 val owlId = fromBase58("CqK3dmwgkK83qVnHrc8YLpm46t5aDLWNViwrhmtLqPeh")
 val houseContract = fromBase58("abcd") // House contract ErgoTree
-val betMultipliers = Coll(2,2,2,3,3,35)
+val betMultipliers = Coll(2,2,2,3,3,36)
 val betMultiplier = betMultipliers(OUTPUTS(2).R4[Int].get)
 val betMatcher = betMultiplier - 1 // Represents the share which the house matches
 
