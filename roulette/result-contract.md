@@ -33,4 +33,5 @@ val paymentProp = if (userWins) OUTPUTS(0).propositionBytes == houseContract
 else OUTPUTS(0).propositionBytes == houseContract
 
 sigmaProp(tokensValid && paymentProp)
-}```
+}
+```
