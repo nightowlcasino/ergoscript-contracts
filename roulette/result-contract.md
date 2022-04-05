@@ -2,7 +2,7 @@
 { // ROULETTE RESULT CONTRACT
 val index = HEIGHT - SELF.creationInfo._1 - 2
 val randomEntropy = byteArrayToLong(CONTEXT.headers(index).id)
-val rouletteNumber = randomEntropy % 36
+val rouletteNumber = randomEntropy % 37
 val userPaymentAddress = SELF.R6[Coll[Byte]].get
 val houseContract = fromBase58("5EvG1rG8DgLajfZf1TGyCeLbwDa9H1sgEB9xDjBdoxKk")
 val tokensValid = allOf(Coll(
