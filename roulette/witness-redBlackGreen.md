@@ -52,7 +52,6 @@ OUTPUTS(1).value == INPUTS(1).value,
 
 // Bet Contract
 OUTPUTS(2).propositionBytes == betContract,
-OUTPUTS(2).tokens(0)._1 == owlId,
-OUTPUTS(2).R5[Coll[Byte]].isDefined)) // Simple assertion to help ensure R5 has wager address (could extend with a length check)
+OUTPUTS(2).tokens(0)._1 == owlId)) 
 } 
 ```
