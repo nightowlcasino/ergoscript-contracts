@@ -58,10 +58,10 @@ OUTPUTS(0).value == INPUTS(0).value,
 // Parallel House Contracts not considered
 // Requires OUTPUTS(2) to be betContract, with OWLS in token index 0
 OUTPUTS(1).propositionBytes == houseContract, 
-OUTPUTS(1).tokens(0)._1 == INPUTS(1).tokens(0)._1,
-OUTPUTS(1).tokens(0)._2 == INPUTS(1).tokens(0)._2 - (betMatcher * OUTPUTS(2).tokens(0)._2 / betMultiplier), // Decrease OWLS by the amount due from the house
-OUTPUTS(1).tokens(1)._1 == INPUTS(1).tokens(1)._1, 
-OUTPUTS(1).tokens(1)._2 == INPUTS(1).tokens(1)._2,
+OUTPUTS(1).tokens(1)._1 == INPUTS(1).tokens(0)._1,
+OUTPUTS(1).tokens(1)._2 == INPUTS(1).tokens(0)._2 - (betMatcher * OUTPUTS(2).tokens(0)._2 / betMultiplier), // Decrease OWLS by the amount due from the house
+OUTPUTS(1).tokens(0)._1 == INPUTS(1).tokens(1)._1, 
+OUTPUTS(1).tokens(0)._2 == INPUTS(1).tokens(1)._2,
 OUTPUTS(1).value == INPUTS(1).value,
 
 // Bet Contract
