@@ -29,8 +29,8 @@ anyOf(Coll((selectedGame == 1 && rouletteNumber % 2 == userGuess),
 // Pick Exact Number
 (selectedGame == 5 && userGuess == rouletteNumber)))
 
-val paymentProp = if (userWins) OUTPUTS(0).propositionBytes == houseContract
-else OUTPUTS(0).propositionBytes == houseContract
+val paymentProp = if (userWins) blake2b256(OUTPUTS(0).propositionBytes) == houseContract
+else blake2b256(OUTPUTS(0).propositionBytes) == houseContract
 
 sigmaProp(tokensValid && paymentProp)
 }
