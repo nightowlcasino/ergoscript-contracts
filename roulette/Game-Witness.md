@@ -33,9 +33,9 @@ OUTPUTS(2).R5(Int) : User selection
 OUTPUTS(2).R6(Coll[Bytes]) : Winner address */
 
 
-val betContract = fromBase58("7EVdepYu8UFFW6HocYPQ1oCno2U7GGxCnL1hPUPZq4k2") // Result Contract
+val betContract = blake2b256(fromBase58("Y3xGKyAbCTa3DnrhYdRdLvADQe1sgUupJsaqrekHuh4")) // Result Contract
 val owlId = fromBase58("CqK3dmwgkK83qVnHrc8YLpm46t5aDLWNViwrhmtLqPeh")
-val houseContract = fromBase58("5EvG1rG8DgLajfZf1TGyCeLbwDa9H1sgEB9xDjBdoxKk") // House contract ErgoTree
+val houseContract = blake2b256(fromBase58("5EvG1rG8DgLajfZf1TGyCeLbwDa9H1sgEB9xDjBdoxKk")) // House contract ErgoTree
 val betMultipliers = Coll(2,2,2,3,3,36)
 val betMultiplier = betMultipliers(OUTPUTS(2).R4[Int].get)
 val betMatcher = betMultiplier - 1 // Represents the share which the house matches
