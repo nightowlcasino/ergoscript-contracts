@@ -14,7 +14,7 @@ val range = userGuess - rouletteNumber // Used for section sub-games
 
 
 val userWins = 
-// Even Odd // User Input: Even is 0 Red is 1
+// Even Odd // User Input: Even is 0 Odd is 1
 anyOf(Coll((selectedGame == 1 && rouletteNumber % 2 == userGuess),
 
 // Lower Upper // User Input: Lower is 10 Upper is 28
