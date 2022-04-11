@@ -1,3 +1,49 @@
+# Roulette Result Contract
+* Author: Krasavice Blasen
+* Created: 01-Apr-2022
+
+## Description
+This contract contains a user's wager and the house's matched funds. It obtains some randomness to determine the spending path of these assets.
+The contract contains different spending paths for each sub-game of roulette.
+
+## Assumptions
+The Roulette Result Box has the following register data:
+- R4: Roulette Sub-game Selection (0-5) 
+- R5: User's Guess for a particular sub-game
+- R6: User's receipient ErgoTree
+
+## Reading User Selection (R5) for each sub-game
+1. Odd/ Even:
+R5 should be set to:
+- 0 for even
+- 1 for odd
+2. Lower Half/ Upper Half:
+R5 should be set to:
+- 10 if the user is selecting 1-18
+- 28 if the user is selecting 19-36
+3. Columns:
+R5 should be set to:
+- 1 for the first column
+- 2 for the second column
+- 3 for the third column
+4. Lower third/ Mid third/ Upper third:
+R5 should be set to:
+- 6 if the user is selecting 1-12
+- 18 if the user is selecting 13-24
+- 30 if the user is selecting 25-36
+5. Exact Number
+R5 should be set to:
+- The number the user selects (0-36)
+
+## Box Schema for spending
+Input Boxes:
+- Self (Result Contract)
+
+Output Boxes:
+- User or House Contract Box
+  - Value and assets of input box (result contract)
+
+
 ```scala
 { // ROULETTE RESULT CONTRACT
 val index = HEIGHT - SELF.creationInfo._1 - 2
