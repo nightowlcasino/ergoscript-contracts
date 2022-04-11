@@ -13,7 +13,7 @@ The spending condition of the contract is as follows:
 - A matching bet is defined from the amount of funds direceted to the rouletteResult contract by the rules of the roulette sub-game being played.
 
 ## Game Rules
-The user will indicate the sub-game they wish to pay in R4.
+The user will indicate the sub-game they wish to play in R4.
 The subgames for a wager of x OWLs are:
 
 0. Red/Black (House match bet = x OWLs)
