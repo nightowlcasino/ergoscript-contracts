@@ -1,4 +1,4 @@
-# Game Token Witness Contract for all roulette sub-games
+# Game Witness Contract for all roulette sub-games
 
 * Author: Krasavice Blasen
 * Created: 01-Apr-2022
@@ -7,10 +7,10 @@
 This contract stores the Night Owl game token, a token which allows the spending of house-contract funds. 
 The contract only allows spending of house-contract funds to match a user bet, where this matched bet alligns with the rules of a roulette sub-game.
 The spending condition of the contract is as follows:
-- Game Token Witness Box and House-contract Box are used as two inputs. 
-- Game Token Witness is an output with unchanged value and assets (hence is a witness)
+- Game Witness Box and House-contract Box are used as two inputs. 
+- Game Witness is an output with unchanged value and assets (hence is a witness)
 - House-Contract Box is an output with unchanged value, however it has a reduced number of OWLs, with this reduction being at most a matching bet. 
-- A matching bet is defined from the amount of funds direceted to the rouletteresult contract by the rules of the roulette sub-game being played.
+- A matching bet is defined from the amount of funds direceted to the rouletteResult contract by the rules of the roulette sub-game being played.
 
 ## Game Rules
 The user will indicate the sub-game they wish to pay in R4.
@@ -22,6 +22,29 @@ The subgames for a wager of x OWLs are:
 3. Columns (House match bet = 2x OWLs)
 4. Lower third/ Mid third/ Upper third (House match bet = 2x OWLs)
 5. Exact number (House match bet = 35x OWLs)
+
+## Box Schema for gameplay
+
+Input Boxes:
+- Self (Game Witness Box)
+- House Contract 
+- User Boxes (Select unspent UTXOs with x OWLs, minBoxValue + txFee)
+
+Output Boxes:
+- Self (Game Witness Box):
+  - Value and assets unchanged (set to self)
+- House Contract:
+  - Value Unchanged, 
+  - token(0) LP token unchanged,
+  - tokens(1) reduced by game multiplier
+- Result Contract:
+  -  Value minBoxValue, 
+  -  Assets(User Wager + Matched Bet) OWLS, 
+  -   R4 encoded int from 0-5, 
+  -  R5: User's bet (See result contract), 
+  -  R6: Prize winning receipient address (encoded ergotree)
+
+
 
 ## The contract
 ```scala
