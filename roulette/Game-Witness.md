@@ -52,9 +52,9 @@ Output Boxes:
 
 {
 /* //// Register Details ////
-OUTPUTS(2).R4(Int) : Indication of roulette sub-game the user wishes to play
-OUTPUTS(2).R5(Int) : User selection
-OUTPUTS(2).R6(Coll[Bytes]) : Winner address */
+OUTPUTS(idx).R4(Int) : Indication of roulette sub-game the user wishes to play
+OUTPUTS(idx).R5(Int) : User selection
+OUTPUTS(idx).R6(Coll[Bytes]) : Winner address */
 
 // Constants //
 val betContract = fromBase58("Y3xGKyAbCTa3DnrhYdRdLvADQe1sgUupJsaqrekHuh4") // Result Contract
