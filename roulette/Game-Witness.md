@@ -48,50 +48,43 @@ Output Boxes:
 
 ## The contract
 ```scala
-
-
 {
 /* //// Register Details ////
 OUTPUTS(idx).R4(Int) : Indication of roulette sub-game the user wishes to play
 OUTPUTS(idx).R5(Int) : User selection
 OUTPUTS(idx).R6(Coll[Bytes]) : Winner address */
 
+
 // Constants //
 val betContract = fromBase58("Y3xGKyAbCTa3DnrhYdRdLvADQe1sgUupJsaqrekHuh4") // Result Contract
 val owlId = fromBase58("CqK3dmwgkK83qVnHrc8YLpm46t5aDLWNViwrhmtLqPeh")
 val houseContract = fromBase58("5EvG1rG8DgLajfZf1TGyCeLbwDa9H1sgEB9xDjBdoxKk") // House contract ErgoTree
-
-// Get Total bet Multiplier //
-// Get all OUTPUTS from 2 to OUTPUT before list fee
 val collectionSize = OUTPUTS.size - 1
 val outputsToScan = OUTPUTS.indices.slice(2,collectionSize)
-// Put all r4 from outputs list in a collection
-val r4Ints :Coll[Int] = outputsToScan.map{
-  (idx: Int) => OUTPUTS(idx).R4[Int].get}
-// Sum Ints in r4 List
-val betMultipliers = Coll(2,2,2,3,3,36)
-val r4Sum = 
-      r4Ints.fold(0, {(z: Int, base:Int) => z + betMultipliers(base)})
-val betMultiplier = r4Sum
-val betMatcher = betMultiplier - outputsToScan.size // Represents the share which the house matches
 
-// Get total wager//
+
+// Put all r4 from outputs list in a collection
+val betMultipliers = Coll(2,2,2,3,3,36)
+
+
+// Get total that house must match//
 // Put all token amounts from outputs list in a collection
 val tokenAmountList :Coll[Long] = outputsToScan.map{
-  (idx: Int) => OUTPUTS(idx).tokens(0)._2
+  (idx: Int) => (betMultipliers(OUTPUTS(idx).R4[Int].get) - 1) * OUTPUTS(idx).tokens(0)._2 / betMultipliers(OUTPUTS(idx).R4[Int].get)
 }
 // Sum total tokens (wager)
-val wager = 
+val houseMatch = 
       tokenAmountList.fold(0L, {(z: Long, base:Long) => z + base})
+
 
 // Check OUTPUTS to result contract valid //
 val validOutputsList: Coll[Boolean] = outputsToScan.map{
   (idx: Int) => allOf(Coll(
 OUTPUTS(idx).tokens(0)._1 == owlId,
-blake2b256(OUTPUTS(idx).propositionBytes) == betContract,
-OUTPUTS(idx).tokens(0)._2 == wager * betMultipliers(OUTPUTS(idx).R4[Int].get)/ r4Sum))
+blake2b256(OUTPUTS(idx).propositionBytes) == betContract))
 }
 val allOutputsValid = allOf(validOutputsList)
+
 
 allOf(Coll(
 INPUTS(0).propositionBytes == SELF.propositionBytes, // Game Guard Witness
@@ -111,7 +104,7 @@ OUTPUTS(0).value == INPUTS(0).value,
 // Requires OUTPUTS(2) to be betContract, with OWLS in token index 0
 OUTPUTS(1).propositionBytes == INPUTS(1).propositionBytes, 
 OUTPUTS(1).tokens(1)._1 == INPUTS(1).tokens(1)._1,
-OUTPUTS(1).tokens(1)._2 == INPUTS(1).tokens(1)._2 - (betMatcher * wager / betMultiplier), // Decrease OWLS by the amount due from the house
+OUTPUTS(1).tokens(1)._2 == INPUTS(1).tokens(1)._2 - houseMatch, // Decrease OWLS by the amount due from the house
 OUTPUTS(1).tokens(0)._1 == INPUTS(1).tokens(0)._1, 
 OUTPUTS(1).tokens(0)._2 == INPUTS(1).tokens(0)._2,
 OUTPUTS(1).value == INPUTS(1).value,
