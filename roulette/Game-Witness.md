@@ -61,23 +61,18 @@ val owlId = fromBase58("CqK3dmwgkK83qVnHrc8YLpm46t5aDLWNViwrhmtLqPeh")
 val houseContract = fromBase58("5EvG1rG8DgLajfZf1TGyCeLbwDa9H1sgEB9xDjBdoxKk") // House contract ErgoTree
 val collectionSize = OUTPUTS.size - 1
 val outputsToScan = OUTPUTS.indices.slice(2,collectionSize)
-
-
-// Put all r4 from outputs list in a collection
 val betMultipliers = Coll(2,2,2,3,3,36)
 
-
 // Get total that house must match//
-// Put all token amounts from outputs list in a collection
+// Put the match amount from each output into a collection
 val tokenAmountList :Coll[Long] = outputsToScan.map{
   (idx: Int) => (betMultipliers(OUTPUTS(idx).R4[Int].get) - 1) * OUTPUTS(idx).tokens(0)._2 / betMultipliers(OUTPUTS(idx).R4[Int].get)
 }
-// Sum total tokens (wager)
+// Sum total of output token amounts
 val houseMatch = 
       tokenAmountList.fold(0L, {(z: Long, base:Long) => z + base})
 
-
-// Check OUTPUTS to result contract valid //
+// Check all relevant outputs are to the result contract  //
 val validOutputsList: Coll[Boolean] = outputsToScan.map{
   (idx: Int) => allOf(Coll(
 OUTPUTS(idx).tokens(0)._1 == owlId,
@@ -86,6 +81,7 @@ blake2b256(OUTPUTS(idx).propositionBytes) == betContract))
 val allOutputsValid = allOf(validOutputsList)
 
 
+// Requirements for the game
 allOf(Coll(
 INPUTS(0).propositionBytes == SELF.propositionBytes, // Game Guard Witness
 blake2b256(INPUTS(1).propositionBytes) == houseContract, // House Matching Bet
@@ -109,7 +105,6 @@ OUTPUTS(1).tokens(0)._1 == INPUTS(1).tokens(0)._1,
 OUTPUTS(1).tokens(0)._2 == INPUTS(1).tokens(0)._2,
 OUTPUTS(1).value == INPUTS(1).value,
 // Bet Contract
-allOutputsValid)) 
- 
+allOutputsValid))  
 }
 ```
