@@ -49,6 +49,7 @@ Output Boxes:
 ## The contract
 ```scala
 
+
 {
 /* //// Register Details ////
 OUTPUTS(2).R4(Int) : Indication of roulette sub-game the user wishes to play
@@ -70,7 +71,7 @@ val r4Ints :Coll[Int] = outputsToScan.map{
 // Sum Ints in r4 List
 val betMultipliers = Coll(2,2,2,3,3,36)
 val r4Sum = 
-      r4Ints.fold(0, {(z: Int, base:Int) => betMultipliers(z) + base})
+      r4Ints.fold(0, {(z: Int, base:Int) => z + betMultipliers(base)})
 val betMultiplier = r4Sum
 val betMatcher = betMultiplier - outputsToScan.size // Represents the share which the house matches
 
@@ -88,7 +89,7 @@ val validOutputsList: Coll[Boolean] = outputsToScan.map{
   (idx: Int) => allOf(Coll(
 OUTPUTS(idx).tokens(0)._1 == owlId,
 blake2b256(OUTPUTS(idx).propositionBytes) == betContract,
-OUTPUTS(idx).tokens(0)._2 == wager * OUTPUTS(idx).R4[Int].get/ r4Sum))
+OUTPUTS(idx).tokens(0)._2 == wager * betMultipliers(OUTPUTS(idx).R4[Int].get)/ r4Sum))
 }
 val allOutputsValid = allOf(validOutputsList)
 
