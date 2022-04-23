@@ -59,14 +59,14 @@ OUTPUTS(idx).R6(Coll[Bytes]) : Winner address */
 val betContract = fromBase58("Y3xGKyAbCTa3DnrhYdRdLvADQe1sgUupJsaqrekHuh4") // Result Contract
 val owlId = fromBase58("CqK3dmwgkK83qVnHrc8YLpm46t5aDLWNViwrhmtLqPeh")
 val houseContract = fromBase58("5EvG1rG8DgLajfZf1TGyCeLbwDa9H1sgEB9xDjBdoxKk") // House contract ErgoTree
-val collectionSize = OUTPUTS.size - 1
-val outputsToScan = OUTPUTS.indices.slice(2,collectionSize)
+val collectionSize = OUTPUTS.size - 2
+val outputsToScan = OUTPUTS.slice(2,collectionSize)
 val betMultipliers = Coll(2,2,2,3,3,36)
 
 // Get total that house must match//
 // Put the match amount from each output into a collection
 val tokenAmountList :Coll[Long] = outputsToScan.map{
-  (idx: Int) => (betMultipliers(OUTPUTS(idx).R4[Int].get) - 1) * OUTPUTS(idx).tokens(0)._2 / betMultipliers(OUTPUTS(idx).R4[Int].get)
+  (box: Box) => (betMultipliers(box.R4[Int].get) - 1) * box.tokens(0)._2 / betMultipliers(box.R4[Int].get)
 }
 // Sum total of output token amounts
 val houseMatch = 
@@ -74,9 +74,9 @@ val houseMatch =
 
 // Check all relevant outputs are to the result contract  //
 val validOutputsList: Coll[Boolean] = outputsToScan.map{
-  (idx: Int) => allOf(Coll(
-OUTPUTS(idx).tokens(0)._1 == owlId,
-blake2b256(OUTPUTS(idx).propositionBytes) == betContract))
+  (box: Box) => allOf(Coll(
+box.tokens(0)._1 == owlId,
+blake2b256(box.propositionBytes) == betContract))
 }
 val allOutputsValid = allOf(validOutputsList)
 
