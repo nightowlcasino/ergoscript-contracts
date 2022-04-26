@@ -46,9 +46,19 @@ Output Boxes:
 
 ```scala
 { // ROULETTE RESULT CONTRACT
-val index = HEIGHT - SELF.creationInfo._1 - 2
-val randomEntropy = byteArrayToLong(CONTEXT.headers(index).id)
-val rouletteNumber = randomEntropy % 37
+// Get oracle box
+val box = CONTEXT.dataInputs(0)
+
+// Find element in oracle report that contains self from mempool
+val elementContainingBox = box.R5[Coll[Coll[Coll[Byte]]]].get.filter{
+(innerBox : Coll[Coll[Byte]]) => innerBox.exists{(bytes : Coll[Byte]) => (bytes == SELF.id)}
+}
+// Get index of found element
+val elementIndex = box.R5[Coll[Coll[Coll[Byte]]]].get.indexOf(elementContainingBox(0),0)
+// Use Eth Hash as entropy
+val entropy =  byteArrayToLong(box.R4[Coll[Coll[Byte]]].get(elementIndex + 1))
+val rouletteNumber = entropy % 37
+
 val userPaymentAddress = SELF.R6[Coll[Byte]].get
 val houseContract = fromBase58("5EvG1rG8DgLajfZf1TGyCeLbwDa9H1sgEB9xDjBdoxKk")
 val tokensValid = allOf(Coll(
