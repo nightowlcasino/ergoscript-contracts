@@ -74,7 +74,7 @@ val selectedGame = SELF.R4[Int].get
 val userGuess = SELF.R5[Int].get
 val range = userGuess - rouletteNumber // Used for section sub-games
 // redBlackBet result logic
-val redBlackBet = if (rouletteNumber <= 10 || (rouletteNumber >= 19 && rouletteNumber <= 28)) {
+val winRedBlack = if (rouletteNumber <= 10 || (rouletteNumber >= 19 && rouletteNumber <= 28)) {
 rouletteNumber % 2 == userGuess
 } else {
 (rouletteNumber % 2 != userGuess) &&
@@ -84,7 +84,7 @@ rouletteNumber % 2 == userGuess
 val userWins = 
 anyOf(Coll(
 // Red Black // User Input: Black is 0, Red is 1
-(selectedGame == 0 && redBlackBet),
+(selectedGame == 0 && winRedBlack),
 
 // Even Odd // User Input: Even is 0 Odd is 1
 (selectedGame == 1 && rouletteNumber % 2 == userGuess),
