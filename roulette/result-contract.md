@@ -13,7 +13,7 @@ The Roulette Result Box has the following register data:
 - R6: User's receipient ErgoTree
 
 ## Reading User Selection (R5) for each sub-game
-1. Black/ Red:
+0. Black/ Red:
 R5 should be set to:
 - 0 for red
 - 1 for black
