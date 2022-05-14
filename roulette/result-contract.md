@@ -13,6 +13,10 @@ The Roulette Result Box has the following register data:
 - R6: User's receipient ErgoTree
 
 ## Reading User Selection (R5) for each sub-game
+1. Black/ Red:
+R5 should be set to:
+- 0 for red
+- 1 for black
 1. Odd/ Even:
 R5 should be set to:
 - 0 for even
@@ -42,36 +46,48 @@ Input Boxes:
 Output Boxes:
 - User or House Contract Box
   - Value and assets of input box (result contract)
+  - Registers:
+  - R4: Element Index of where SELF exists in oracle report
+  - R5: Position Index of where SELF exists within the inner collection of boxes.
 
 
 ```scala
 { // ROULETTE RESULT CONTRACT
-// Get oracle box
+// Get oracle box report
 val box = CONTEXT.dataInputs(0)
 
-// Find element in oracle report that contains self from mempool
-val elementContainingBox = box.R5[Coll[Coll[Coll[Byte]]]].get.filter{
-(innerBox : Coll[Coll[Byte]]) => innerBox.exists{(bytes : Coll[Byte]) => (bytes == SELF.id)}
-}
-// Get index of found element
-val elementIndex = box.R5[Coll[Coll[Coll[Byte]]]].get.indexOf(elementContainingBox(0),0)
+// Get Index for where the bet occurred
+val elementIndex = OUTPUTS(0).R4[Int].get
+// Get the position for where the Ergo Box was made
+val boxPosition = OUTPUTS(0).R5[Int].get
 // Use Eth Hash as entropy
 val entropy =  byteArrayToLong(box.R4[Coll[Coll[Byte]]].get(elementIndex + 1))
 val rouletteNumber = entropy % 37
 
 val userPaymentAddress = SELF.R6[Coll[Byte]].get
 val houseContract = fromBase58("5EvG1rG8DgLajfZf1TGyCeLbwDa9H1sgEB9xDjBdoxKk")
-val tokensValid = allOf(Coll(
-OUTPUTS(0).tokens(0)._1 == fromBase58("CqK3dmwgkK83qVnHrc8YLpm46t5aDLWNViwrhmtLqPeh"),
-OUTPUTS(0).tokens(0)._2 == SELF.tokens(0)._2))
+val setupValid = allOf(Coll(
+OUTPUTS(0).tokens(0)._1 == fromBase58("BTavg5arCrFyhRjEpn15aiYH9dLVLx2wGUKsJYuQi6XT"),
+OUTPUTS(0).tokens(0)._2 == SELF.tokens(0)._2,
+box.R5[Coll[Coll[Coll[Byte]]]].get(elementIndex)(boxPosition) == SELF.id))
 val selectedGame = SELF.R4[Int].get
 val userGuess = SELF.R5[Int].get
 val range = userGuess - rouletteNumber // Used for section sub-games
-
+// redBlackBet result logic
+val redBlackBet = if (rouletteNumber <= 10 || (rouletteNumber >= 19 && rouletteNumber <= 28)) {
+rouletteNumber % 2 == userGuess
+} else {
+(rouletteNumber % 2 != userGuess) &&
+(userGuess == 1 || userGuess == 0)
+}
 
 val userWins = 
+anyOf(Coll(
+// Red Black // User Input: Black is 0, Red is 1
+(selectedGame == 0 && redBlackBet),
+
 // Even Odd // User Input: Even is 0 Odd is 1
-anyOf(Coll((selectedGame == 1 && rouletteNumber % 2 == userGuess),
+(selectedGame == 1 && rouletteNumber % 2 == userGuess),
 
 // Lower Upper // User Input: Lower is 10 Upper is 28
 (selectedGame == 2 && range >= -8 && range <= 9),
@@ -88,6 +104,6 @@ anyOf(Coll((selectedGame == 1 && rouletteNumber % 2 == userGuess),
 val paymentProp = if (userWins) OUTPUTS(0).propositionBytes == SELF.R6[Coll[Byte]].get
 else blake2b256(OUTPUTS(0).propositionBytes) == houseContract
 
-sigmaProp(tokensValid && paymentProp)
+sigmaProp(setupValid && paymentProp)
 }
 ```
