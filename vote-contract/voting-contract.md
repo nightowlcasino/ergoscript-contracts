@@ -73,9 +73,27 @@ val correctOwnerList = OUTPUTS(0).R6[Coll[(Long, Coll[Byte])]].get == ownerList
 
 val combineConditions = allOf(Coll(
 OUTPUTS(0).tokens(0)._2 == sumOfVotes,
+OUTPUTS(0).tokens(0)._1 == voteTokenId,
+OUTPUTS(0).value >=  minValue,
+OUTPUTS(0).propositionBytes == SELF.propositionBytes,
+OUTPUTS(1).value == minValue,
+OUTPUTS(1).tokens.size == 0,
 referenceAndDestination,
 correctTokenAmount,
 correctOwnerList))
+
+// ################## Spending Path - Refund #########################
+
+// Inputs
+/* Self as Input 0 and any other inputs needed to fund mining fee */
+
+// Outputs
+/* Output(0) - Self, with one voter's tokens removed and their share
+   removed from R6.  */
+// Output(1) - Voter's refunded tokens. All tokens from voter are refunded. 
+// Output(2) - Mining box, with no tokens and min value 
+
+// ################## Refund - BEGIN #################################
 
 combineConditions
 }
