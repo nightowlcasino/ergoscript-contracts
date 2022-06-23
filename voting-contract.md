@@ -71,9 +71,6 @@ box.R5[Coll[Byte]].get == OUTPUTS(0).R5[Coll[Byte]].get }
 val ownerList = INPUTS(0).R6[Coll[(Long, Coll[Byte])]].get.append(INPUTS(1).R6[Coll[(Long, Coll[Byte])]].get)
 val correctOwnerList = OUTPUTS(0).R6[Coll[(Long, Coll[Byte])]].get == ownerList
 
-// Check all inputs carry the tokens suggested in R6
-
-
 val combineConditions = allOf(Coll(
 OUTPUTS(0).tokens(0)._2 == sumOfVotes,
 referenceAndDestination,
