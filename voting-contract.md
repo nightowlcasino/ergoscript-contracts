@@ -6,7 +6,8 @@
 // Tokens: Index 0 has vote tokens
 // Registers: 
 // R4 Int - Vote Reference Number
-// R5 Coll[(Coll[Byte], Int)] - Vote owners and their vote share
+// R5 Coll[Byte] - Asset Destination Ergotree
+// R6 Coll[(Long, Coll[Byte])] - Vote owners and their vote share
 
 // Spending Paths:
 // Refund (Send all votes to owners)
@@ -16,13 +17,13 @@
 
 // ################## Constant Values #################################
 
-val voteTokenId = fromBase58("")
+val voteTokenId = fromBase58("BTavg5arCrFyhRjEpn15aiYH9dLVLx2wGUKsJYuQi6XT")
 val minValue = 100000
 
 // ################## Spending Path - Combine #########################
 
 // Inputs
-/* All inputs assumed to have R4 (Int) and R5 (Coll[(Coll[Byte], Int)]) 
+/* All inputs assumed to have R4, R5 and R6
    defined with vote tokens in tokens(0) (all inputs should have
    self.propBytes, but there is no need to check this) */
 
@@ -44,12 +45,41 @@ val minValue = 100000
 val listOfVoteTokens : Coll[Long] = INPUTS.map {(box: Box) => box.tokens(0)._2}
 val sumOfVotes = listOfVoteTokens.fold(0L, {(z: Long, base: Long) => z + base})
 
+
+// Count number of tokens promised in input 0
+val listOfPromised = INPUTS(0).R6[Coll[(Long, Coll[Byte])]].get.map {(share: (Long, Coll[Byte])) => share(0)}
+val sumOfPromised = listOfPromised.fold(0L, {(z: Long, base: Long) => z + base})
+
+// Count number of tokens promised in input 1
+val listOfPromised1 = INPUTS(1).R6[Coll[(Long, Coll[Byte])]].get.map {(share: (Long, Coll[Byte])) => share(0)}
+val sumOfPromised1 = listOfPromised1.fold(0L, {(z: Long, base: Long) => z + base})
+
+val correctTokenAmount = allOf(Coll(
+// Check number of tokens matches promise
+INPUTS(0).tokens(0)._2 == sumOfPromised,
+INPUTS(0).tokens(0)._1 == voteTokenId,
+INPUTS(1).tokens(0)._2 == sumOfPromised1,
+INPUTS(1).tokens(0)._1 == voteTokenId))
+
+// Check all voters are voting for same reference and destination
+val referenceAndDestination = INPUTS.forall {(box: Box) => 
+// Check reference and destination
+box.R4[Int].get == OUTPUTS(0).R4[Int].get &&
+box.R5[Coll[Byte]].get == OUTPUTS(0).R5[Coll[Byte]].get }
+
 // Get desired output owner list (only works for 2 inputs)
-val ownerList = INPUTS(0).R5[Coll[(Coll[Byte], Int)]].get.append(INPUTS(1).R5[Coll[(Coll[Byte], Int)]].get)
+val ownerList = INPUTS(0).R6[Coll[(Long, Coll[Byte])]].get.append(INPUTS(1).R6[Coll[(Long, Coll[Byte])]].get)
+val correctOwnerList = OUTPUTS(0).R6[Coll[(Long, Coll[Byte])]].get == ownerList
 
-allOf(Coll(
+// Check all inputs carry the tokens suggested in R6
+
+
+val combineConditions = allOf(Coll(
 OUTPUTS(0).tokens(0)._2 == sumOfVotes,
-OUTPUTS(0).R5[Coll[(Coll[Byte], Int)]].get = ownerList))
-}
+referenceAndDestination,
+correctTokenAmount,
+correctOwnerList))
 
+combineConditions
+}
 ```
