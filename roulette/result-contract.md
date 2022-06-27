@@ -65,9 +65,9 @@ val entropy =  byteArrayToLong(box.R4[Coll[Coll[Byte]]].get(elementIndex + 1))
 val rouletteNumber = entropy % 37
 
 val userPaymentAddress = SELF.R6[Coll[Byte]].get
-val houseContract = fromBase58("FmWWJdpY23GmNeWeVb3Gm32dPehUHYQpdZ7WK2Cs8HVd")
+val houseContract = fromBase58("21MXRVrKz9yEYqwg5mU4f4kJZp2KXJ7xdMVoeTzYA1ij")
 val setupValid = allOf(Coll(
-OUTPUTS(0).tokens(0)._1 == fromBase58("BTavg5arCrFyhRjEpn15aiYH9dLVLx2wGUKsJYuQi6XT"),
+OUTPUTS(0).tokens(0)._1 == fromBase58("5ntdGJPBDgnMhwsPn3D7McmcD3LyVXXSQbKoaeMDexjQ"),
 OUTPUTS(0).tokens(0)._2 == SELF.tokens(0)._2,
 box.R5[Coll[Coll[Coll[Byte]]]].get(elementIndex)(boxPosition) == SELF.id))
 val selectedGame = SELF.R4[Int].get
