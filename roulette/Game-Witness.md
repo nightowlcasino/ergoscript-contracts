@@ -56,9 +56,9 @@ OUTPUTS(idx).R6(Coll[Bytes]) : Winner address */
 
 
 // Constants //
-val betContract = fromBase58("6ZZgfR44obnbNUKyku6qD93NvZCqr7DethQmvcvZi6Tn") // Result Contract
-val owlId = fromBase58("BTavg5arCrFyhRjEpn15aiYH9dLVLx2wGUKsJYuQi6XT")
-val houseContract = fromBase58("FmWWJdpY23GmNeWeVb3Gm32dPehUHYQpdZ7WK2Cs8HVd") // House contract ErgoTree
+val betContract = fromBase58("DHZ9RqHqmWAnoyLuHroDhx3mwufzC1DqgLFwcccTF2La") // Result Contract
+val owlId = fromBase58("5ntdGJPBDgnMhwsPn3D7McmcD3LyVXXSQbKoaeMDexjQ")
+val houseContract = fromBase58("21MXRVrKz9yEYqwg5mU4f4kJZp2KXJ7xdMVoeTzYA1ij") // House contract ErgoTree
 val collectionSize = OUTPUTS.size - 2
 val outputsToScan = OUTPUTS.slice(2,collectionSize)
 val betMultipliers = Coll(2,2,2,3,3,36)
