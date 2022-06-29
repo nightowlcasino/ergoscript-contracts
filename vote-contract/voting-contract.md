@@ -7,7 +7,7 @@
 // Registers: 
 // R4 Int - Vote Reference Number
 // R5 Coll[Byte] - Asset Destination Ergotree
-// R6 Coll[(Long, Coll[Byte])] - Vote owners and their vote share
+// R6 Coll[(Long, GroupElement)] - Vote owners PK and their vote share
 
 // Spending Paths:
 // Refund (Send all votes to owners)
@@ -38,6 +38,8 @@ val minValue = 100000
    and use higher erg value */
 /* This version of the contract only allows for 2 inputs, combining more
    than 2 inputs is not as trivial and is an area of further research */
+/* Voters cannot add votes under the same vote address, instead they can
+   refund and delegate more tokens or use a different address they control*/
 
 // ################## Combine - BEGIN #################################
 
@@ -47,11 +49,11 @@ val sumOfVotes = listOfVoteTokens.fold(0L, {(z: Long, base: Long) => z + base})
 
 
 // Count number of tokens promised in input 0
-val listOfPromised = INPUTS(0).R6[Coll[(Long, Coll[Byte])]].get.map {(share: (Long, Coll[Byte])) => share(0)}
+val listOfPromised = INPUTS(0).R6[Coll[(Long, GroupElement)]].get.map {(share: (Long, GroupElement)) => share(0)}
 val sumOfPromised = listOfPromised.fold(0L, {(z: Long, base: Long) => z + base})
 
 // Count number of tokens promised in input 1
-val listOfPromised1 = INPUTS(1).R6[Coll[(Long, Coll[Byte])]].get.map {(share: (Long, Coll[Byte])) => share(0)}
+val listOfPromised1 = INPUTS(1).R6[Coll[(Long, GroupElement)]].get.map {(share: (Long, GroupElement)) => share(0)}
 val sumOfPromised1 = listOfPromised1.fold(0L, {(z: Long, base: Long) => z + base})
 
 val correctTokenAmount = allOf(Coll(
@@ -68,8 +70,8 @@ box.R4[Int].get == OUTPUTS(0).R4[Int].get &&
 box.R5[Coll[Byte]].get == OUTPUTS(0).R5[Coll[Byte]].get }
 
 // Get desired output owner list (only works for 2 inputs)
-val ownerList = INPUTS(0).R6[Coll[(Long, Coll[Byte])]].get.append(INPUTS(1).R6[Coll[(Long, Coll[Byte])]].get)
-val correctOwnerList = OUTPUTS(0).R6[Coll[(Long, Coll[Byte])]].get == ownerList
+val ownerList = INPUTS(0).R6[Coll[(Long, GroupElement)]].get.append(INPUTS(1).R6[Coll[(Long, GroupElement)]].get)
+val correctOwnerList = OUTPUTS(0).R6[Coll[(Long, GroupElement)]].get == ownerList
 
 val combineConditions = allOf(Coll(
 OUTPUTS(0).tokens(0)._2 == sumOfVotes,
@@ -90,11 +92,46 @@ correctOwnerList))
 // Outputs
 /* Output(0) - Self, with one voter's tokens removed and their share
    removed from R6.  */
-// Output(1) - Voter's refunded tokens. All tokens from voter are refunded. 
+/* Output(1) - Voter's refunded tokens. All tokens from voter are refunded. 
+   Voter public key written in R4[GroupElement] and share in R5[Long] */
 // Output(2) - Mining box, with no tokens and min value 
+
+// Remarks 
+/* If there is only one voter in share list, Output(0) still exists with
+   an empty R6 and min Value */
 
 // ################## Refund - BEGIN #################################
 
-combineConditions
+// Get voter and shares
+val voterPk = OUTPUTS(1).R4[GroupElement].get
+val voterShare = OUTPUTS(1).R5[Long].get
+
+// Get desired result owner list
+val starterOwnerList = SELF.R6[Coll[(Long, GroupElement)]].get
+val resultOwnerList = starterOwnerList.filter {
+(share: (Long, GroupElement)) => 
+share(0) != voterShare || share(1) != voterPk}
+
+// Check output 0 valid
+val correctOutput0 = allOf(Coll(
+OUTPUTS(0).tokens(0)._2 == SELF.tokens(0)._2 - voterShare,
+OUTPUTS(0).tokens(0)._1 == voteTokenId,
+OUTPUTS(0).value >=  minValue,
+OUTPUTS(0).propositionBytes == SELF.propositionBytes,
+SELF.R4[Int].get == OUTPUTS(0).R4[Int].get,
+SELF.R5[Coll[Byte]].get == OUTPUTS(0).R5[Coll[Byte]].get,
+resultOwnerList  == OUTPUTS(0).R6[Coll[(Long, GroupElement)]].get,
+// Some additional safety conditions
+SELF.tokens(0)._2 == 2))
+
+
+
+if (OUTPUTS(0).tokens.size < 2) {
+sigmaProp(combineConditions)
+} else {
+sigmaProp(correctOutput0 && proveDlog(voterPk))
+} 
+
+
 }
 ```
