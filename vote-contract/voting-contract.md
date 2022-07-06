@@ -1,3 +1,16 @@
+# Vote Contract
+
+* Status: Draft
+* Created: 06-Jul-2022
+
+## Description 
+This contract can be used to change the p2s address of some script through some defined voting system. 
+This contract holds vote tokens that have some designated governance value.
+This contract allows for voters to use their vote tokens toward some specific vote through a reference number, where the voter can vote for an ammended p2s address.
+This contract allows for voters to combine their votes under one UTXO, as well as allowing voters to withdraw their votes through the maintenance of a collection of tuples in R6. 
+
+
+
 ```scala
 // VOTING CONTRACT
 
