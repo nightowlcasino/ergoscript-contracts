@@ -6,6 +6,8 @@
 This contract contains a user's wager and the house's matched funds. It obtains some randomness to determine the spending path of these assets.
 The contract contains different spending paths for each sub-game of roulette.
 
+Please note the current version of this contract is using a dataInput for its RNG, but there are no checks at all for this box. Checks will be put in place when the RNG solution is finalised (i.e check dataInput contains some special RNG token). The current version of the contract is to be used in testing only.
+
 ## Assumptions
 The Roulette Result Box has the following register data:
 - R4: Roulette Sub-game Selection (0-5) 
