@@ -16,7 +16,6 @@ The contract can and should be extended to include some game logic but, no matte
 ```scala 
 allOf(
   Coll(
-
 		OUTPUTS(0).propositionBytes == SELF.propositionBytes, 
 		OUTPUTS(0).tokens(0)        == SELF.tokens(0), 
 		OUTPUTS(0).value            == SELF.value,
