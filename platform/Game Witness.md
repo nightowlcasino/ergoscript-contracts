@@ -6,7 +6,7 @@
 
 ## Description
 The game witness contract is platform contract that is used to access house funds and enforce any game logic of any Night Owl game. 
-The contract protects a _GameWitnessBox_ which is a box that holds a single _GameWitnessToken_. 
+The contract protects a _GameWitnessBox_ which is a box that holds a single _GameWitnessToken_ and simply acts as a witness that validates the use of house funds.
 
 ## Contract Requirements:
 The only requirement of this contract is that the _GameWitnessToken_ is preserved under the same script. 
