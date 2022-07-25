@@ -80,10 +80,10 @@
 	}
 
 	sigmaProp(
-	paymentProp &&
-	validEthHash &&
-	validOracle &&
-	validTokens
+		paymentProp &&
+		validEthHash &&
+		validOracle &&
+		validTokens
 	)
 }
 ```
