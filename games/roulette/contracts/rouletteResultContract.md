@@ -5,6 +5,7 @@
 * Status: Testing
 
 ## Description
+This contract guards a _RouletteResultBox_ which is a box containing some amount of OWL tokens and some register details which indicate a user's selection in the game _Roulette_. The contract calls for a _dataInput_ which provides historical ETH hashes and ERG boxIds to the contract to produce a random number for the roulette game. Depending on the produced random number, either the house will be able to receive the OWLs within the box or the user will. 
 
 ## Contract Requirements
 
