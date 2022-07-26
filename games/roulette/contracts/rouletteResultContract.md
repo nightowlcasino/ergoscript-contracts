@@ -1,4 +1,4 @@
-# Game Witness Contract
+# Roulette Result Contract
 
 * Author: Krasavice Blasen
 * Created: 01-Apr-2022
@@ -8,6 +8,11 @@
 This contract guards a _RouletteResultBox_ which is a box containing some amount of OWL tokens and some register details which indicate a user's selection in the game _Roulette_. The contract calls for a _dataInput_ which provides historical ETH hashes and ERG boxIds to the contract to produce a random number for the roulette game. Depending on the produced random number, either the house will be able to receive the OWLs within the box or the user will. 
 
 ## Contract Requirements
+- Read a dataInput from an _oracle_ and authenticate the oracle by checking the _OraclePoolNFT_
+- Check the given coordinates for the RouletteResultBox id match the actual RouletteResultBox id.
+- Get the roulette number by converting the second eth hash after the given coordinates to a long mod 37
+- Check whether the user won by evaluating their game selection and guess as per the _RouletteGameSchema_
+- If the user has won, ensure the winner box is under the provided user address, else ensure the winner box is under the house funds address.
 
 ```scala
 {
