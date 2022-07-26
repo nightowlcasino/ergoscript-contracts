@@ -6,6 +6,10 @@
 
 ## Description
 
+## Contract Requirements
+
+## Contract
+
 ```scala 
 {
 	val heldERG0 = SELF.value
