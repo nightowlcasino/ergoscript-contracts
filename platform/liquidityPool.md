@@ -1,3 +1,16 @@
+# Liqudity Pool Contract
+
+* Author: Krasavice Blasen
+* Created: 25-Apr-2022
+* Status: Testing
+
+## Description
+
+## Contract Requirements
+
+## Contract
+
+
 ```scala
 {
 	val InitiallyLockedLP   = 9000000000000002L
