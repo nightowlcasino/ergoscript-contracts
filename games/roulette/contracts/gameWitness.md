@@ -24,7 +24,7 @@ to ensure they can claim any winning funds.
 	val OwlId               = fromBase58("")
 	val HouseContractScript = fromBase58("") 
 	val BetMultipliers      = Coll(2,2,2,3,3,36) // Represents multiplier for each sub-game
-  val MaxPayoutMultiplier = 67
+        val MaxPayoutMultiplier = 67
 	
 	// All extensions of the game witness contract must include validGameWitnesss
 	val validGameWitnesss = 
