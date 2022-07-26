@@ -16,6 +16,7 @@ to ensure they can claim any winning funds.
 - The contract can access exactly the required number of owls for the user's bets.
 - Withdrawn Owl's are all delivered to a _RouletteResultBoxes_
 
+## Contract
 ```scala
 {
 	// Constants
