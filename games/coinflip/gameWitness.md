@@ -1,5 +1,4 @@
-```
-scala
+``` scala
 {
 	// Constants
 	val BetResultScript     = fromBase58("") 
@@ -68,4 +67,5 @@ scala
 		validGameWitnesss &&
 		underMaxPayout
 	)
-}```
+}
+```
