@@ -1,10 +1,11 @@
-# Game Witness Contract
+# Swap Token Contract
 
 * Author: Krasavice Blasen
 * Created: 25-Jul-2022
 * Status: Testing
 
 ## Description
+A contract which allows some token to be swapped for some other token in 1:1 ratio. In the context of the Night Owl platform it used to swap sigUSD for OWL token in 1:1 ratio. 
 
 ## Contract Requirements
 
